@@ -1,0 +1,88 @@
+# .gitignore
+.DS_Store
+*.retry
+*.pyc
+__pycache__/
+.vscode/
+.idea/
+*.log
+.env
+vault.yml
+vault.key
+inventory/hosts.yml
+group_vars/all.yml
+
+# Logs
+*.log
+*.out
+*.err
+
+# Python virtual environment
+venv/
+.env/
+env/
+
+# Ansible temporary files
+*.retry
+ansible.cfg~
+
+# Sensitive files (recommend using Ansible Vault for encryption)
+*.vault.yml
+*.vault
+*.key
+
+# SSH files
+*.pem
+*.key
+
+# Container-related files
+docker-compose.override.yml
+.docker/
+.dockerignore
+
+# Temporary files created by editors or the system
+*.swp
+*.swo
+*.bak
+*.tmp
+*.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Generated systemd service files
+*.service
+
+# Roles and collections cache
+collections/
+roles/roles_cache/
+roles/.molecule/
+
+# Ansible Molecule testing
+.molecule/
+.molecule_cache/
+test-results/
+
+# Terraform (if used alongside Ansible)
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+crash.log
+
+# Kubernetes-related (if used with Ansible for containers)
+.kube/
+*.kubeconfig
+
+# Node.js (if used for auxiliary scripts or apps)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Miscellaneous
+*.tar
+*.gz
+*.zip

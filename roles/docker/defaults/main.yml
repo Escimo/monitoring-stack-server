@@ -1,0 +1,29 @@
+# roles/docker/defaults/main.yml
+---
+# Users to be added to the docker group
+docker_users:
+  - ubuntu
+
+# Docker repository
+docker_apt_repository: "deb [arch={{ ansible_architecture }}] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+docker_apt_gpg_key: "https://download.docker.com/linux/ubuntu/gpg"
+
+# Versions of Docker components (latest by default)
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+# Docker Service Settings
+docker_service_state: started
+docker_service_enabled: true
+
+# Docker daemon settings
+docker_daemon_options:
+  storage-driver: "overlay2"
+  log-driver: "json-file"
+  log-opts:
+    max-size: "100m"
+    max-file: "3"

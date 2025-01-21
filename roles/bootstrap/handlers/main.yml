@@ -1,0 +1,6 @@
+# roles/bootstrap/handlers/main.yml
+---
+- name: restart ntpsec
+  service:
+    name: ntpsec
+    state: restarted

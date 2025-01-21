@@ -1,0 +1,57 @@
+---
+# roles/monitoring/templates/prometheus.yml.j2
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+
+rule_files:
+  - "alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node'
+    static_configs:
+      - targets:
+{% for host in target_hosts %}
+        - '{{ host.host }}:9100'  # Node Exporter
+{% endfor %}
+    
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets:
+{% for host in target_hosts %}
+        - '{{ host.host }}:8080'  # cAdvisor
+{% endfor %}
+
+  - job_name: 'mysql'
+    static_configs:
+      - targets:
+{% for host in target_hosts %}
+        - '{{ host.host }}:9104'  # MySQL Exporter
+{% endfor %}
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+{% for host in target_hosts %}
+        - 'https://{{ host.host }}'  # Blackbox Exporter
+{% endfor %}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9115  # Blackbox exporter's hostname:port

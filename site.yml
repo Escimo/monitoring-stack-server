@@ -1,0 +1,9 @@
+# site.yml
+---
+- name: Deploy monitoring stack
+  hosts: monitoring
+  become: true
+  roles:
+    - bootstrap
+    - docker
+    - monitoring

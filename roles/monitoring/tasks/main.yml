@@ -1,0 +1,66 @@
+# roles/monitoring/tasks/main.yml
+---
+- name: Create monitoring directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /opt/monitoring
+    - /opt/monitoring/prometheus
+    - /opt/monitoring/grafana
+    - /opt/monitoring/alertmanager
+    - /opt/monitoring/grafana/provisioning/datasources
+    - /opt/monitoring/grafana/provisioning/dashboards
+    - /opt/monitoring/grafana/dashboards
+
+- name: Copy docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/monitoring/docker-compose.yml
+    mode: '0644'
+
+- name: Copy Prometheus config
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/monitoring/prometheus/prometheus.yml
+    mode: '0644'
+
+- name: Copy Alertmanager config
+  template:
+    src: alertmanager.yml.j2
+    dest: /opt/monitoring/alertmanager/alertmanager.yml
+    mode: '0644'
+
+- name: Copy alerts rules
+  template:
+    src: alerts.yml.j2
+    dest: /opt/monitoring/prometheus/alerts.yml
+    mode: '0644'
+
+- name: Copy Grafana datasource configuration
+  template:
+    src: grafana/provisioning/datasources/datasources.yml.j2
+    dest: /opt/monitoring/grafana/provisioning/datasources/datasources.yml
+    mode: '0644'
+
+- name: Copy Grafana dashboard configuration
+  template:
+    src: grafana/provisioning/dashboards/dashboards.yml.j2
+    dest: /opt/monitoring/grafana/provisioning/dashboards/dashboards.yml
+    mode: '0644'
+
+- name: Copy Grafana dashboards
+  copy:
+    src: "{{ item }}.json"
+    dest: "/opt/monitoring/grafana/dashboards/{{ item }}.json"
+    mode: '0644'
+  loop:
+    - node-exporter-dashboard
+    - mysql-dashboard
+    - blackbox-dashboard
+
+- name: Deploy monitoring stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/monitoring
+    state: present

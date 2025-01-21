@@ -1,0 +1,7 @@
+# requirements.yml
+---
+collections:
+  - name: community.general
+    version: "7.5.0"
+  - name: community.docker
+    version: "3.7.0"
